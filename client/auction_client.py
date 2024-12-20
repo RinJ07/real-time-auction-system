@@ -9,6 +9,21 @@ def listen_for_updates(sock):
             if not message:
                 break
             print(f"\n{message}")
+
+            # Handle auction closure and winner confirmation
+            if "Auction closed!" in message:
+                print("The auction has ended.")
+                if "Congratulations! You are the winner." in message:
+                    while True:
+                        confirmation = input("Type 'yes' to confirm your purchase: ")
+                        sock.send(confirmation.encode())
+                        if confirmation.lower() == "yes":
+                            print("Thank you for confirming your purchase!")
+                            break
+                print("Exiting as auction has ended.")
+                sock.close()
+                break
+
         except:
             print("Disconnected from the server.")
             break
